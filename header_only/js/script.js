@@ -883,7 +883,7 @@ const fixedTextMetricRules = [
 function lockTextMetricElement(element, rule) {
   if (!element || !rule) return;
   element.style.setProperty("font-family", rule.family, "important");
-  element.style.setProperty("font-size", pxToVw(rule.size), "important");
+  element.style.setProperty("font-size", pxToVwFont(rule.size), "important");
   element.style.setProperty("line-height", pxToVw(rule.line), "important");
   element.style.setProperty("font-weight", String(rule.weight), "important");
   element.style.setProperty("text-size-adjust", "none", "important");
@@ -1044,7 +1044,7 @@ function renderPlainElementText(element, text, options = {}) {
   element.style.setProperty("--plain-font-size", pxToVw(size));
   element.style.setProperty("--plain-line-height", pxToVw(height));
   element.style.setProperty("--plain-font-weight", String(weight));
-  element.style.setProperty("font-size", pxToVw(size), "important");
+  element.style.setProperty("font-size", pxToVwFont(size), "important");
   element.style.setProperty("line-height", pxToVw(height), "important");
   element.style.setProperty("font-weight", String(weight), "important");
   element.style.removeProperty("color");
@@ -1920,6 +1920,20 @@ function pxToVw(px) {
       .toFixed(5)
       .replace(/\.?0+$/, "") +
     ")"
+  );
+}
+
+// Same as pxToVw but multiplied by --fsm (font-size multiplier). text_zoom_fix.js
+// sets --fsm = 1/Z when Firefox "zoom text only" is active, so JS-rendered cell
+// text neutralizes the same way the CSS font-sizes do. No-op at --fsm=1, so the
+// normal-zoom layout is byte-for-byte unchanged.
+function pxToVwFont(px) {
+  return (
+    "calc(var(--dpx) * " +
+    Number(px)
+      .toFixed(5)
+      .replace(/\.?0+$/, "") +
+    " * var(--fsm, 1))"
   );
 }
 
