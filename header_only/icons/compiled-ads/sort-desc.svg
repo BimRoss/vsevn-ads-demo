@@ -1,0 +1,6 @@
+<svg viewBox="0 0 20 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M5 2.5v12" stroke="#000000" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M5 19.5L1.75 15.75h6.5L5 19.5z" fill="#000000"/>
+  <g transform="translate(11.4537 11.5) scale(0.0041504 -0.0041504)"><path d="M1146 157V0H160V157ZM1114 1316 206 0H87V144L994 1456H1114ZM1032 1456V1298H100V1456Z" fill="#000000"/></g>
+  <g transform="translate(11.2275 21.5) scale(0.0041504 -0.0041504)"><path d="M708 1327 226 0H29L584 1456H711ZM1112 0 629 1327 626 1456H753L1310 0ZM1087 539V381H269V539Z" fill="#000000"/></g>
+</svg>
