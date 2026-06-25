@@ -88,7 +88,7 @@ body:has(#adsTable) #zoomFrame {
   height: calc(50 * var(--px));
   padding: 0 calc(22 * var(--px));
   background: #ffffff;
-  border: calc(0.3 * var(--px)) solid var(--c-border-dropdown);
+  border: max(1px, calc(0.3 * var(--px))) solid var(--c-border-dropdown);
   border-radius: 0;
   box-sizing: border-box;
   cursor: pointer;
@@ -142,7 +142,7 @@ body:has(#adsTable) #zoomFrame {
   margin-top: 0;
   max-height: none;
   overflow: visible;
-  border: calc(0.3 * var(--px)) solid var(--c-border-dropdown);
+  border: max(1px, calc(0.3 * var(--px))) solid var(--c-border-dropdown);
   border-radius: 0;
   box-shadow: none;
 }
@@ -283,7 +283,7 @@ body:has(#adsTable) #zoomFrame {
   max-height: calc(300 * var(--px));
   overflow-y: auto;
   background: #fff;
-  border: calc(0.3 * var(--px)) solid var(--c-border-dropdown);
+  border: max(1px, calc(0.3 * var(--px))) solid var(--c-border-dropdown);
   border-radius: 0;
   box-shadow: none;
   z-index: 60;
@@ -302,7 +302,7 @@ body:has(#adsTable) #zoomFrame {
     color 0.12s ease;
 }
 .ads-dropdown-option + .ads-dropdown-option {
-  border-top: calc(0.3 * var(--px)) solid var(--c-border-dropdown-divider);
+  border-top: max(1px, calc(0.3 * var(--px))) solid var(--c-border-dropdown-divider);
 }
 .ads-dropdown-option.is-selected {
   color: var(--c-link);
@@ -330,7 +330,7 @@ body:has(#adsTable) #zoomFrame {
   padding: 0;
   margin: 0;
   background: #ffffff;
-  border: calc(0.3 * var(--px)) solid var(--c-border);
+  border: max(1px, calc(0.3 * var(--px))) solid var(--c-border);
   border-radius: 0;
   box-shadow: none;
   box-sizing: border-box;
@@ -395,7 +395,7 @@ body:has(#adsTable) #zoomFrame {
   height: calc(50 * var(--px));
   padding: var(--fc-toolbar-top, calc(10 * var(--px))) calc(14 * var(--px)) 0;
   background: #ffffff;
-  border: calc(0.3 * var(--px)) solid var(--c-border);
+  border: max(1px, calc(0.3 * var(--px))) solid var(--c-border);
   border-radius: 0;
   box-sizing: border-box;
   display: block;
@@ -433,7 +433,7 @@ body:has(#adsTable) #zoomFrame {
   height: calc(50 * var(--px));
   padding: 0;
   background: #ffffff;
-  border: calc(0.3 * var(--px)) solid var(--c-border);
+  border: max(1px, calc(0.3 * var(--px))) solid var(--c-border);
   border-radius: 0;
   cursor: pointer;
   overflow: visible;
@@ -528,7 +528,7 @@ body:has(#adsTable) #zoomFrame {
   height: calc(50 * var(--px));
   padding: 0;
   background: #ffffff;
-  border: calc(0.3 * var(--px)) solid var(--c-border);
+  border: max(1px, calc(0.3 * var(--px))) solid var(--c-border);
   border-radius: 0;
   cursor: pointer;
   box-sizing: border-box;
@@ -610,19 +610,19 @@ body:has(#adsTable) #zoomFrame {
   padding: 0 calc(10 * var(--px));
   align-items: center;
   background: #ffffff;
-  border: calc(0.3 * var(--px)) solid var(--c-border-dropdown);
+  border: max(1px, calc(0.3 * var(--px))) solid var(--c-border-dropdown);
   border-radius: 0;
   box-sizing: border-box;
 }
 .ads-dropdown--rows.is-open {
   z-index: 61;
-  border: calc(0.3 * var(--px)) solid var(--c-link);
+  border: max(1px, calc(0.3 * var(--px))) solid var(--c-link);
 }
 .ads-dropdown.is-open.ads-dropdown--rows > .ads-dropdown-menu {
-  top: calc(100% + calc(0.3 * var(--px)));
+  top: calc(100% + max(1px, calc(0.3 * var(--px))));
   left: calc(-0.3 * var(--px));
   width: calc(100% + 0.6 * var(--px));
-  border: calc(0.3 * var(--px)) solid var(--c-link);
+  border: max(1px, calc(0.3 * var(--px))) solid var(--c-link);
   border-top: none;
 }
 .ads-dropdown--rows .ads-dropdown-text {
@@ -654,7 +654,7 @@ body:has(#adsTable) #zoomFrame {
   padding-bottom: 0;
   border-radius: 0;
   box-shadow: none;
-  border: calc(0.3 * var(--px)) solid var(--c-border-dropdown);
+  border: max(1px, calc(0.3 * var(--px))) solid var(--c-border-dropdown);
   border-top: 0;
   box-sizing: border-box;
 }
@@ -697,7 +697,7 @@ body:has(#adsTable) #zoomFrame {
   height: calc(50 * var(--px));
   padding: 0;
   background: #fffefb;
-  border: calc(0.3 * var(--px)) solid var(--c-border);
+  border: max(1px, calc(0.3 * var(--px))) solid var(--c-border);
   border-radius: 0;
   font-family: "Roboto", sans-serif;
   font-size: calc((calc(22 * var(--px))) * var(--fsm, 1));
@@ -736,7 +736,7 @@ body:has(#adsTable) #zoomFrame {
 /* Disabled для прочих кнопок пагинации */
 .ads-pagination button:disabled:not(.is-edge) {
   background: #f1f1f1;
-  border: calc(0.3 * var(--px)) solid #d4d4d4;
+  border: max(1px, calc(0.3 * var(--px))) solid #d4d4d4;
   color: #c6c6c6;
   cursor: default;
 }
@@ -756,7 +756,7 @@ body:has(#adsTable) #zoomFrame {
   font-weight: 400;
   line-height: 1;
   background: #fffefb;
-  border: calc(0.3 * var(--px)) solid var(--c-border);
+  border: max(1px, calc(0.3 * var(--px))) solid var(--c-border);
 }
 /* Hover — белый фон, голубая обводка и текст (макет п.14) */
 .ads-pagination button:hover:not(:disabled):not(.active) {
@@ -1058,7 +1058,7 @@ body:has(#adsTable) #zoomFrame {
 }
 .ads-table th,
 .ads-table td {
-  border: calc(0.3 * var(--px)) solid var(--c-border-table);
+  border: max(1px, calc(0.3 * var(--px))) solid var(--c-border-table);
   vertical-align: top;
   box-sizing: border-box;
   overflow: hidden;
@@ -1221,7 +1221,7 @@ body.ads-col-resizing * {
   overflow: hidden;
 }
 .ads-search-field + .ads-search-field {
-  border-top: calc(0.3 * var(--px)) solid var(--c-border-table);
+  border-top: max(1px, calc(0.3 * var(--px))) solid var(--c-border-table);
 }
 .ads-search-field .ads-search-ico {
   position: absolute;
