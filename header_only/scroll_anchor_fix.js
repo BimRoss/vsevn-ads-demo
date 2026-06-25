@@ -65,10 +65,20 @@
     });
   }
 
+  // A resize / visualViewport-resize is only a *zoom* when devicePixelRatio
+  // actually changes. At fractional zoom (e.g. 175%) plain wheel scrolling
+  // fires spurious visualViewport resizes with an UNCHANGED dpr; treating those
+  // as zoom made correct() yank the scroll back to the anchor — the upward jerk.
+  // Gate the resize path on a real dpr change so scrolling never re-pins.
+  function maybeZoomFromResize() {
+    if ((window.devicePixelRatio || 1) === lastDPR) return; // scroll/chrome resize, not zoom
+    beginZoom();
+  }
+
   window.addEventListener('scroll', capture, { passive: true });
-  window.addEventListener('resize', beginZoom);
+  window.addEventListener('resize', maybeZoomFromResize);
   if (window.visualViewport) {
-    window.visualViewport.addEventListener('resize', beginZoom);
+    window.visualViewport.addEventListener('resize', maybeZoomFromResize);
   }
   document.addEventListener('keydown', function (e) {
     if ((e.ctrlKey || e.metaKey) &&
@@ -89,7 +99,7 @@
   window.__saiAnchor = { mode: 'v6-element-dpr', destroy: function () {
     clearTimers();
     window.removeEventListener('scroll', capture);
-    window.removeEventListener('resize', beginZoom);
-    if (window.visualViewport) window.visualViewport.removeEventListener('resize', beginZoom);
+    window.removeEventListener('resize', maybeZoomFromResize);
+    if (window.visualViewport) window.visualViewport.removeEventListener('resize', maybeZoomFromResize);
   } };
 })();
