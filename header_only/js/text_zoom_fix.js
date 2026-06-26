@@ -12,11 +12,15 @@
   function fix(){
     var Z=getTextZoom();
     if(Math.abs(Z-last)<0.005)return;
+    var prev=last;
     last=Z;
     if(Math.abs(Z-1)<0.02){
       document.documentElement.style.removeProperty('--fsm');
+      console.log('[TZF] textZoom reset to 1 (was '+prev.toFixed(4)+'), --fsm removed');
     }else{
-      document.documentElement.style.setProperty('--fsm',(1/Z).toFixed(6));
+      var fsm=(1/Z).toFixed(6);
+      document.documentElement.style.setProperty('--fsm',fsm);
+      console.log('[TZF] textZoom changed '+prev.toFixed(4)+' → '+Z.toFixed(4)+', --fsm='+fsm);
     }
   }
   function init(){
@@ -38,4 +42,5 @@
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);
   else init();
+  console.log('[TZF] text_zoom_fix loaded');
 })();

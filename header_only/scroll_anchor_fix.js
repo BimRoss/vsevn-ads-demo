@@ -19,6 +19,22 @@
   var lastDPR = window.devicePixelRatio || 1;
   var timers = [];
 
+  // ── DEBUG LOG ──────────────────────────────────────────────────────────────
+  // Set window.__saiDebug = false in console to mute.
+  function dbg(label, data) {
+    if (window.__saiDebug === false) return;
+    var vp = window.visualViewport;
+    var info = {
+      t: performance.now().toFixed(1) + 'ms',
+      dpr: (window.devicePixelRatio || 1).toFixed(3),
+      vpScale: vp ? vp.scale.toFixed(3) : 'n/a',
+      scrollY: window.scrollY.toFixed(1),
+      locked: locked
+    };
+    if (data) Object.assign(info, data);
+    console.log('[SAI] ' + label, info);
+  }
+
   function rows() {
     var b = document.getElementById('adsTableBody');
     return b ? b.children : [];
@@ -33,7 +49,12 @@
     var vh = window.innerHeight || document.documentElement.clientHeight;
     for (var i = 0; i < list.length; i++) {
       var r = list[i].getBoundingClientRect();
-      if (r.bottom > 1 && r.top < vh) { anchorEl = list[i]; anchorTop = r.top; return; }
+      if (r.bottom > 1 && r.top < vh) {
+        anchorEl = list[i];
+        anchorTop = r.top;
+        dbg('capture', { rowIndex: i, rowTop: r.top.toFixed(1) });
+        return;
+      }
     }
     anchorEl = null;
   }
@@ -43,24 +64,41 @@
     var nd = window.devicePixelRatio || 1;
     // anchorTop was measured at lastDPR; rescale to keep the physical position.
     var target = anchorTop * (lastDPR / nd);
-    var diff = anchorEl.getBoundingClientRect().top - target;
+    var actual = anchorEl.getBoundingClientRect().top;
+    var diff = actual - target;
+    dbg('correct', {
+      lastDPR: lastDPR.toFixed(3),
+      newDPR: nd.toFixed(3),
+      anchorTop: anchorTop.toFixed(1),
+      target: target.toFixed(1),
+      actual: actual.toFixed(1),
+      diff: diff.toFixed(1),
+      willScroll: Math.abs(diff) > 0.5
+    });
     if (Math.abs(diff) > 0.5) window.scrollBy(0, diff);
   }
 
   function clearTimers() { timers.forEach(clearTimeout); timers = []; }
 
   // Called on any zoom intent (resize / visualViewport / Ctrl+wheel / Ctrl+/-).
-  function beginZoom() {
+  function beginZoom(source) {
+    dbg('beginZoom ▶', { source: source || '?', lastDPR: lastDPR.toFixed(3), newDPR: (window.devicePixelRatio || 1).toFixed(3) });
     locked = true;            // freeze capture immediately (keep pre-zoom anchor)
     clearTimers();
     requestAnimationFrame(function () {
       correct();
       // text_zoom_fix.js re-adjusts --fsm at ~50/150ms which changes row
       // heights; re-pin the same row after those late reflows.
-      [150, 320].forEach(function (t) { timers.push(setTimeout(correct, t)); });
+      [150, 320].forEach(function (t) {
+        timers.push(setTimeout(function() {
+          dbg('correct@' + t + 'ms (late reflow)');
+          correct();
+        }, t));
+      });
       timers.push(setTimeout(function () {
         lastDPR = window.devicePixelRatio || 1;
         locked = false;
+        dbg('unlock', { lastDPR: lastDPR.toFixed(3) });
       }, 380));
     });
   }
@@ -70,24 +108,33 @@
   // fires spurious visualViewport resizes with an UNCHANGED dpr; treating those
   // as zoom made correct() yank the scroll back to the anchor — the upward jerk.
   // Gate the resize path on a real dpr change so scrolling never re-pins.
-  function maybeZoomFromResize() {
-    if ((window.devicePixelRatio || 1) === lastDPR) return; // scroll/chrome resize, not zoom
-    beginZoom();
+  function maybeZoomFromResize(src) {
+    var nd = window.devicePixelRatio || 1;
+    if (nd === lastDPR) {
+      dbg('resize IGNORED (dpr unchanged)', { src: src, dpr: nd.toFixed(3) });
+      return; // scroll/chrome resize, not zoom
+    }
+    dbg('resize → zoom detected', { src: src, oldDPR: lastDPR.toFixed(3), newDPR: nd.toFixed(3) });
+    beginZoom(src);
   }
 
   window.addEventListener('scroll', capture, { passive: true });
-  window.addEventListener('resize', maybeZoomFromResize);
+  window.addEventListener('resize', function() { maybeZoomFromResize('window.resize'); });
   if (window.visualViewport) {
-    window.visualViewport.addEventListener('resize', maybeZoomFromResize);
+    window.visualViewport.addEventListener('resize', function() { maybeZoomFromResize('visualViewport.resize'); });
   }
   document.addEventListener('keydown', function (e) {
     if ((e.ctrlKey || e.metaKey) &&
         (e.key === '+' || e.key === '-' || e.key === '=' || e.key === '0')) {
-      beginZoom();
+      dbg('keydown zoom', { key: e.key });
+      beginZoom('keydown');
     }
   });
   document.addEventListener('wheel', function (e) {
-    if (e.ctrlKey) beginZoom();
+    if (e.ctrlKey) {
+      dbg('wheel zoom', { deltaY: e.deltaY });
+      beginZoom('ctrl+wheel');
+    }
   }, { passive: true });
 
   if (document.readyState === 'loading') {
@@ -102,4 +149,6 @@
     window.removeEventListener('resize', maybeZoomFromResize);
     if (window.visualViewport) window.visualViewport.removeEventListener('resize', maybeZoomFromResize);
   } };
+
+  console.log('[SAI] scroll_anchor_fix v6-debug loaded. dpr=' + lastDPR + '. Mute with: window.__saiDebug = false');
 })();
